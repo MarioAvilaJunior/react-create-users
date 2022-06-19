@@ -2,16 +2,16 @@ import React from "react";
 import { UserForm, UsersList } from "./components";
 import { Box } from "@mui/material";
 
-export interface User {
+export interface IUser {
   id: string;
   name: string;
   age: number;
 }
 
 function App() {
-  const [usersList, setUsersList] = React.useState<User[]>([]);
+  const [usersList, setUsersList] = React.useState<IUser[]>([]);
 
-  const addUser = (user: User) => {
+  const addUser = (user: IUser) => {
     const newUsersList = [...usersList];
     newUsersList.push(user);
     setUsersList(newUsersList);
