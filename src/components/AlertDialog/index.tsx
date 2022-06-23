@@ -20,7 +20,7 @@ const AlertDialog = (props: IAlertDialogProps) => {
   const alertText =
     props.alertError === "empty name or age"
       ? "Please enter a valid name and age (non-empty values)."
-      : "Please enter a positive number.";
+      : "Please enter a number higher than zero.";
 
   return (
     <div>

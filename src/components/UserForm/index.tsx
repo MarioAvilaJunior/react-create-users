@@ -6,12 +6,11 @@ import { IUser } from "../../App";
 import { v4 as uuidv4 } from "uuid";
 import { AlertDialog } from "../AlertDialog";
 
-export type errorDialog = "empty name or age" | "negative age";
+export type errorDialog = "empty name or age" | "age lower than one";
 
 const UserForm = (props: { onSubmit: (user: IUser) => void }) => {
-  const [name, setName] = React.useState<string>("Mario");
-  const [age, setAge] = React.useState<number>(27);
-  const [ageString, setAgeString] = React.useState<string>("");
+  const [name, setName] = React.useState<string>("");
+  const [age, setAge] = React.useState<string>("");
   const [invalidInput, setInvalidInput] = React.useState<boolean>(false);
   const [alertError, setAlertError] =
     React.useState<errorDialog>("empty name or age");
@@ -21,25 +20,21 @@ const UserForm = (props: { onSubmit: (user: IUser) => void }) => {
   };
 
   const handleAgeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAgeString(event.target.value);
-    const updatedAge = parseInt(event.target.value, 10);
-    if (updatedAge) {
-      setAge(updatedAge);
-    } else {
-      setAge(0);
-    }
+    setAge(event.target.value);
   };
 
   const handleFormSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
-    if (age < 0) {
-      setAlertError("negative age");
+    if (parseInt(age, 10) < 1) {
+      setAlertError("age lower than one");
       setInvalidInput(true);
       return;
     }
-    if (name && age) {
-      const user: IUser = { id: uuidv4(), name: name, age: age };
+    if (name.trim().length > 0 && age.trim().length > 0) {
+      const user: IUser = { id: uuidv4(), name: name, age: parseInt(age, 10) };
       props.onSubmit(user);
+      setName("");
+      setAge("");
     } else {
       setAlertError("empty name or age");
       setInvalidInput(true);
@@ -65,7 +60,7 @@ const UserForm = (props: { onSubmit: (user: IUser) => void }) => {
       <TextField
         id="user-age"
         label="Age (Years)"
-        value={ageString}
+        value={age}
         onChange={handleAgeChange}
         inputProps={{ inputMode: "numeric", pattern: "-?[0-9]*" }}
       />
